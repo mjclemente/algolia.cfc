@@ -64,17 +64,6 @@ component output="false" displayname="algolia.cfc"  {
   }
 
   //Indices
-
-  /**
-  * https://www.algolia.com/doc/rest-api/search/#search-an-index
-  * @hint Search inside an index.
-  */
-  public struct function search( required string indexName, required string query, struct args = {} ) {
-    args[ 'query' ] = query;
-    var params = { 'params': parseQueryParams( args ) };
-    return apiCall( true, 'POST', '/indexes/#indexName#/query', {}, params );
-  }
-
   /**
   * https://www.algolia.com/doc/rest-api/search/#add-an-object-without-id
   * https://www.algolia.com/doc/rest-api/search/#addupdate-an-object-by-id
@@ -97,10 +86,69 @@ component output="false" displayname="algolia.cfc"  {
     return batch( indexName, requests );
   }
 
-  //List indexes
-  public struct function listIndexes( numeric page ) {
-    return apiCall( true, 'GET', '/indexes' );
+  // public struct function getObject() {}
+
+  // public struct function getObjects() {}
+
+  // public struct function partialUpdateObject() {}
+
+  // public struct function partialUpdateObjects() {}
+
+  // public struct function saveObject() {}
+
+  // public struct function saveObjects() {}
+
+  // public struct function deleteObject() {}
+
+  // public struct function deleteObjects() {}
+
+  // public struct function deleteBy() {}
+
+  // public struct function deleteByQuery() {}
+
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#search-an-index
+  * @hint Search inside an index.
+  */
+  public struct function search( required string indexName, required string query, struct args = {} ) {
+    args[ 'query' ] = query;
+    var params = { 'params': parseQueryParams( args ) };
+    return apiCall( true, 'POST', '/indexes/#indexName#/query', {}, params );
   }
+
+  // public struct function searchForFacetValues() {}
+
+  // public struct function searchDisjunctiveFaceting() {}
+
+  // public struct function waitTask() {}
+
+  // public struct function getTaskStatus() {}
+
+  // public struct function getSettings() {}
+
+  // public struct function clearIndex() {}
+
+  // public struct function setSettings() {}
+
+  // public struct function listApiKeys() {}
+
+  // public struct function listUserKeys() {}
+
+  // public struct function getUserKeyACL() {}
+
+  // public struct function getApiKey() {}
+
+  // public struct function deleteApiKey() {}
+
+  // public struct function deleteUserKey() {}
+
+  // public struct function addApiKey() {}
+
+  // public struct function addUserKey() {}
+
+  // public struct function updateApiKey() {}
+
+  // public struct function updateUserKey() {}
 
   /**
   * https://www.algolia.com/doc/rest-api/search/#batch-write-operations
@@ -110,8 +158,6 @@ component output="false" displayname="algolia.cfc"  {
     //python client checks if requests is a list/array. If so, it transforms to struct with 'requests' key. Worthwhile?
     return apiCall( false, 'POST', '/indexes/#indexName#/batch', {}, requests );
   }
-
-  //HELPER PRIVATE FUNCTIONS
 
   /**
   * https://www.algolia.com/doc/rest-api/search/#batch-write-operations
@@ -130,6 +176,40 @@ component output="false" displayname="algolia.cfc"  {
     }
 
     return { 'requests' : requests };
+  }
+
+  // public struct function browseFrom() {}
+
+  // public struct function searchSynonyms() {}
+
+  // public struct function getSynonym() {}
+
+  // public struct function deleteSynonym() {}
+
+  // public struct function clearSynonyms() {}
+
+  // public struct function batchSynonyms() {}
+
+  // public struct function saveSynonym() {}
+
+  // public struct function searchFacet() {}
+
+  // public struct function searchRules() {}
+
+  // public struct function getRule() {}
+
+  // public struct function deleteRule() {}
+
+  // public struct function clearRules() {}
+
+  // public struct function batchRules() {}
+
+  // public struct function saveRule() {}
+
+
+  //List indexes
+  public struct function listIndexes( numeric page ) {
+    return apiCall( true, 'GET', '/indexes' );
   }
 
   // API CALL RELATED PRIVATE FUNCTIONS
