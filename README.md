@@ -1,0 +1,63 @@
+# algolia.cfc
+A CFML wrapper for the Algolia API
+
+This project borrows heavily from the API frameworks built by [jcberquist](https://github.com/jcberquist), such as [stripecfc](https://github.com/jcberquist/stripecfc), [xero-cfml](https://github.com/jcberquist/xero-cfml), and [aws-cfml](https://github.com/jcberquist/aws-cfml).
+
+This is a very early stage API wrapper. Feel free to use the issue tracker to report bugs or suggest improvements!
+
+## Quick Start
+
+In 30 seconds, this quick start tutorial will show you how to index and search objects.
+
+### Initialize the client
+
+You first need to initialize the client. For that you need your **Application ID** and **API Key**. You can find both of them on your [Algolia account](https://www.algolia.com/api-keys).
+
+```cfc
+algoliaSearch = new algolia( applicationId = 'YourApplicationID', apiKey = 'YourAPIKey' );
+```
+
+### Push data
+If you attempt to load data into an index that does not exist, Algolia will automatically create the index before populating it. Consequently, you can use the sample data provided in `members.json` to create and populate your first index, using the following code:
+
+```cfc
+members = deserializeJSON( fileRead( expandPath( 'members.json' ) ) ); //update path, based on your app setup
+response = algoliaSearch.addObjects( 'members', members );
+```
+
+### Search
+
+You can now search for members using first name, last name, company, etc. (even with typos):
+
+```cfc
+// search by first name
+writeDump( var='#algoliaSearch.search( 'members', 'Constance' )#' );
+
+// search a first name with typo
+writeDump( var='#algoliaSearch.search( 'members', 'Constnce' )#' );
+
+// search for a company
+writeDump( var='#algoliaSearch.search( 'members', 'scentric' )#' );
+
+// search for a first name and company
+writeDump( var='#algoliaSearch.search( 'members', 'Constance Ziore' )#' );
+```
+
+### A Note About Working with Indices
+
+Most of the official Algolia clients follow an Object Oriented pattern, requiring an *Index* object to be initialized in order to read/write from that index. Currently, this client does not have an *Index* object (so it doesn't need to be initialized). Instead, you need to include the name of the index with your requests. The operations available generally use the following format:
+
+```cfc
+algoliaSearch.operation( indexName, args );
+```
+
+There is an obvious convenience to having an *Index* object; you can initialize it once, and then you don't need to provide the `indexName` argument again. So adding an *Index* object is on the TODO list for this project.
+
+
+### Frontend search
+
+**Note:** If you are building a web application, Algolia recommends using their [JavaScript client](https://github.com/algolia/algoliasearch-client-javascript) to perform queries, for two primary reasons:
+
+  * Your users get a better response time by not going through your servers
+  * It will offload unnecessary tasks from your servers
+  * (Also, why reinvent the wheel)
