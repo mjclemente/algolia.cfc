@@ -28,8 +28,8 @@ component output="false" displayname="algolia.cfc"  {
 
     if ( !hosts.len() ) {
 
-      readHosts = [ 'https://#applicationId#.algolia.net/#apiVersion#' ];
-      writeHosts = [ 'https://#applicationId#-dsn.algolia.net/#apiVersion#' ];
+      writeHosts = [ 'https://#applicationId#.algolia.net/#apiVersion#' ];
+      readHosts = [ 'https://#applicationId#-dsn.algolia.net/#apiVersion#' ];
 
       var fallbackHosts = arrayMap( [1,2,3],
         function( item, index ) {
