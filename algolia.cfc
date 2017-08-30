@@ -86,9 +86,39 @@ component output="false" displayname="algolia.cfc"  {
     return batch( indexName, requests );
   }
 
-  // public struct function getObject() {}
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#retrieve-an-object
+  * @hint Get an object from this index.
+  */
+  public struct function getObject( required string indexName, required string objectId, array attributesToRetrieve = [] ) {
+    var params = {};
+    if ( attributesToRetrieve.len() )
+      params = { 'attributes' : attributesToRetrieve.toList( ',' ) };
 
-  // public struct function getObjects() {}
+    return apiCall( true, 'GET', '/indexes/#indexName#/#objectId#', params );
+  }
+
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#retrieve-multiple-objects
+  * @hint Get several objects from this index.
+  */
+  public struct function getObjects( required string indexName, required array objectIds, array attributesToRetrieve = [] ) {
+    var requests = [];
+
+    var attributeList = '';
+    if ( attributesToRetrieve.len() )
+      attributeList = attributesToRetrieve.toList( ',' );
+
+    for ( var objectId in objectIds ) {
+      var operation = { 'indexName' : indexName, 'objectID' : objectId };
+      if ( attributeList.len() )
+        operation[ 'attributesToRetrieve' ] = attributeList;
+
+      requests.append( operation );
+    }
+
+    return apiCall( true, 'POST', '/indexes/*/objects', {}, { 'requests' : requests } );
+  }
 
   // public struct function partialUpdateObject() {}
 
