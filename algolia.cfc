@@ -388,11 +388,14 @@ component output="false" displayname="algolia.cfc"  {
     return queryString.len() ? queryString : '';
   }
 
+  /**
+  * @hint Algolia claims the objectId can be a string or integer, but the documentation to retrieve multiple objects (https://www.algolia.com/doc/rest-api/search/#retrieve-multiple-objects) requests it as a string and requests to that endpoint fail when an integer is passed. We'll just convert those to strings, unless we return into problems elsewhere.
+  */
   private string function parseBody( required any body ) {
     if ( isStruct( body ) )
-      return serializeJson( body );
+      return serializeJson( body ).reReplaceNoCase( '"(objectID)":\s?([\d]+)', '"\1":"\2"', 'all' );
     else if ( isJson( body ) )
-      return body;
+      return body.reReplaceNoCase( '"(objectID)":\s?([\d]+)', '"\1":"\2"', 'all' );
     else
       return '';
   }
