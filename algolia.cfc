@@ -132,7 +132,20 @@ component output="false" displayname="algolia.cfc"  {
     return apiCall( false, 'POST', '/indexes/#indexName#/#object.objectId#/partial', params, object );
   }
 
-  // public struct function partialUpdateObjects() {}
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#batch-write-operations
+  * @hint Partially Override the content of several objects.
+  * @objects contains an array of objects to update (each object must contains a objectID attribute)
+  */
+  public struct function partialUpdateObjects( required string indexName, required array objects, string objectIdKey = 'objectID', boolean createIfNotExists = true ) {
+
+    if ( createIfNotExists )
+      var requests = buildBatch( 'partialUpdateObject', objects, true, objectIdKey );
+    else
+      var requests = buildBatch( 'partialUpdateObjectNoCreate', objects, true, objectIdKey );
+
+    return batch( indexName, requests );
+  }
 
   // public struct function saveObject() {}
 
