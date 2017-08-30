@@ -223,7 +223,7 @@ component output="false" displayname="algolia.cfc"  {
     for ( var object in objects ) {
       var operation = { 'action' : action, 'body' : object };
       if ( withObjectId && object.keyExists( objectIdKey ) )
-        operation[ 'objectId' ] = object[ objectIdKey ];
+        operation[ 'objectID' ] = object[ objectIdKey ];
 
       requests.append( operation );
     }
