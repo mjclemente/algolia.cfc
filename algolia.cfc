@@ -120,7 +120,17 @@ component output="false" displayname="algolia.cfc"  {
     return apiCall( true, 'POST', '/indexes/*/objects', {}, { 'requests' : requests } );
   }
 
-  // public struct function partialUpdateObject() {}
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#partially-update-an-object
+  * @hint Update partially an object (only update attributes passed in argument).
+  * @object contains the object attributes to override, the object must contains an objectID attribute
+  * @createIfNotExists specifies whether or not a missing object must be created
+  */
+  public struct function partialUpdateObject( required string indexName, required any object, boolean createIfNotExists = true ) {
+    var params = createIfNotExists ? {} : { 'createIfNotExists' : false };
+
+    return apiCall( false, 'POST', '/indexes/#indexName#/#object.objectId#/partial', params, object );
+  }
 
   // public struct function partialUpdateObjects() {}
 
