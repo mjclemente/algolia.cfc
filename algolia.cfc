@@ -68,13 +68,13 @@ component output="false" displayname="algolia.cfc"  {
   * https://www.algolia.com/doc/rest-api/search/#add-an-object-without-id
   * https://www.algolia.com/doc/rest-api/search/#addupdate-an-object-by-id
   * @hint Add an object with or without an Id.
-  * @content This is the objecting being added to the index. It can either be a struct or json
+  * @object This is the object being added to the index. It can either be a struct or json
   */
-  public struct function addObject( required string indexName, required any content, any objectId ) {
+  public struct function addObject( required string indexName, required any object, any objectId ) {
     if ( isNull( objectId ) )
-      return apiCall( false, 'POST', '/indexes/#indexName#', {}, content );
+      return apiCall( false, 'POST', '/indexes/#indexName#', {}, object );
     else
-      return apiCall( false, 'PUT', '/indexes/#indexName#/#objectId#', {}, content );
+      return apiCall( false, 'PUT', '/indexes/#indexName#/#objectId#', {}, object );
   }
 
   /**
