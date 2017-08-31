@@ -165,7 +165,27 @@ component output="false" displayname="algolia.cfc"  {
     return batch( indexName, requests );
   }
 
-  // public struct function deleteObject() {}
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#delete-an-object
+  * @hint Delete an object from the index.
+  */
+  public struct function deleteObject( required string indexName, required string objectID ) {
+    return apiCall( false, 'DELETE', '/indexes/#indexName#/#objectID#' );
+  }
+
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#batch-write-operations
+  * @hint Delete several objects.
+  * @objects contains an array of objectIDs to delete.
+  */
+  public struct function deleteObjects( required string indexName, required array objects ) {
+    var objectIds = [];
+    for ( var id in objects ) {
+      objectIds.append( { 'objectID' : id } );
+    }
+    var requests = buildBatch( 'deleteObject', objectIds, true );
+    return batch( indexName, requests );
+  }
 
   // public struct function deleteObjects() {}
 
