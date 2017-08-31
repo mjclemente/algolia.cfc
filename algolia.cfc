@@ -63,7 +63,6 @@ component output="false" displayname="algolia.cfc"  {
     return this;
   }
 
-  //Indices
   /**
   * https://www.algolia.com/doc/rest-api/search/#add-an-object-without-id
   * https://www.algolia.com/doc/rest-api/search/#addupdate-an-object-by-id
@@ -147,9 +146,24 @@ component output="false" displayname="algolia.cfc"  {
     return batch( indexName, requests );
   }
 
-  // public struct function saveObject() {}
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#addupdate-an-object-by-id
+  * @hint Override the content of object. Basically the same add addObject, with an objectId provided
+  * @object This is the object being added to the index. It can either be a struct or json
+  */
+  public struct function saveObject( required string indexName, required any object, string objectIDKey = 'objectID' ) {
+    return apiCall( false, 'PUT', '/indexes/#indexName#/#object[ objectIDKey ]#', {}, object );
+  }
 
-  // public struct function saveObjects() {}
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#batch-write-operations
+  * @hint Override the content of several objects.
+  * @objects contains an array of objects to update (each object must contains a objectID attribute)
+  */
+  public struct function saveObjects( required string indexName, required array objects, string objectIdKey = 'objectID' ) {
+    var requests = buildBatch( 'updateObject', objects, true, objectIdKey );
+    return batch( indexName, requests );
+  }
 
   // public struct function deleteObject() {}
 
