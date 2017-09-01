@@ -200,8 +200,44 @@ component output="false" displayname="algolia.cfc"  {
     return apiCall( false, 'POST', '/indexes/#indexName#/deleteByQuery', {}, params );
   }
 
-  //not worth implementing, as the approach taken by most wrappers has been deprecated
-  // public struct function deleteByQuery() {}
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#batch-write-operations
+  * @hint Delete all objects matching a query.
+  * Actually justs browses the query and then delegates to deleteObjects() to perform the deletes, based on the objectIds returned by the query results
+  * While there is now a specific endpoint for deleteByQuery, it seems this approach offers significantly more flexibility, so it's worth providing
+  *
+  * NOTE: This is a convenience method that involves multiple requests to the API. The HTTP data returned is from the final search request. To do this we need to track the results of each request separately from the data we're actually using. Not thrilled with this, but it works.
+  *
+  * The data key returned is a struct with an array of the objectIDs deleted
+  *
+  */
+  public struct function deleteByQuery( required string indexName, required string query, struct args = {} ) {
+
+    args[ 'attributesToRetrieve' ] = 'objectID';
+    args[ 'hitsPerPage' ] = 1000;
+    args[ 'distinct' ] = false;
+
+    var deletedObjectIds = [];
+    var result = search( indexName, query, args );
+    var results = result.data;
+
+    while ( results[ 'nbHits' ] ) {
+      var objectIDs = [];
+      for ( var record in results[ 'hits' ] ) {
+        objectIDs.append( record[ 'objectID' ] );
+      }
+
+      var deleteRequest = deleteObjects( indexName, objectIDs ).data;
+      waitTask( indexName, deleteRequest[ 'taskID' ] );
+      deletedObjectIds.append( objectIDs, true );
+
+      result = search( indexName, query, args );
+      results = result.data;
+    }
+    result[ 'data' ] = { 'objectIDs' : deletedObjectIds }; //overwrite the data with the deleted objects that we've tracked
+
+    return result;
+  }
 
   /**
   * https://www.algolia.com/doc/rest-api/search/#search-an-index
