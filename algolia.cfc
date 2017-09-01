@@ -308,7 +308,7 @@ component output="false" displayname="algolia.cfc"  {
     any body = '',
     struct headers = { } )  {
 
-    var queryString = parseQueryParams( queryParams, false );
+    var queryString = parseQueryParams( queryParams );
     headers.append( getBaseHttpHeaders(), true );
     var requestHeaders = parseHeaders( headers );
     var requestBody = parseBody( body );
