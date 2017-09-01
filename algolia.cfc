@@ -217,7 +217,24 @@ component output="false" displayname="algolia.cfc"  {
 
   // public struct function searchDisjunctiveFaceting() {}
 
-  // public struct function waitTask() {}
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#get-a-tasks-status
+  * @hint Wait the publication of a task on the server.
+  * All server task are asynchronous and you can check with this method that the task is published.
+  * @timeBeforeRetry the time in milliseconds before retry (default = 100ms)
+  */
+  public struct function waitTask( required string indexName, required string taskID, numeric timeBeforeRetry = 100 ) {
+    var taskPending = true;
+    var result = {};
+    while ( taskPending ) {
+      result = getTaskStatus( indexName, taskID ).data;
+      if ( result[ 'status' ] == 'published' )
+        taskPending = false;
+      else
+        sleep( timeBeforeRetry );
+    }
+    return result;
+  }
 
   // public struct function getTaskStatus() {}
 
