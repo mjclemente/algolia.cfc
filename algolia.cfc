@@ -187,10 +187,20 @@ component output="false" displayname="algolia.cfc"  {
     return batch( indexName, requests );
   }
 
-  // public struct function deleteObjects() {}
 
-  // public struct function deleteBy() {}
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#delete-by-query
+  * @hint Delete all objects matching a query.
+  * This endpoint doesn’t support all the options of a query, only its filters (numeric, facet, or tag) and geo queries. It also doesn’t accept empty filters or query.
+  *
+  * It appears that the previous deleteByQuery method implemented by most clients involved manually writing a query and then deleting the ids that were returned (via internally calling deleteObjects()), some have deprecated this approach
+  */
+  public struct function deleteBy( required string indexName, required struct args ) {
+    var params = { 'params': parseQueryParams( args ) };
+    return apiCall( false, 'POST', '/indexes/#indexName#/deleteByQuery', {}, params );
+  }
 
+  //not worth implementing, as the approach taken by most wrappers has been deprecated
   // public struct function deleteByQuery() {}
 
   /**
