@@ -435,9 +435,15 @@ component output="false" displayname="algolia.cfc"  {
         var encodedKey = encodeQueryParams
           ? encodeUrl( queryParamKey )
           : queryParamKey;
-        var encodedValue = encodeQueryParams && len( queryParams[ queryParamKey ] )
-          ? encodeUrl( queryParams[ queryParamKey ] )
-          : queryParams[ queryParamKey ];
+        if ( !isArray( queryParams[ queryParamKey ] ) ) {
+          var encodedValue = encodeQueryParams && len( queryParams[ queryParamKey ] )
+            ? encodeUrl( queryParams[ queryParamKey ] )
+            : queryParams[ queryParamKey ];
+        } else {
+          var encodedValue = encodeQueryParams && ArrayLen( queryParams[ queryParamKey ] )
+            ?  encodeUrl( serializeJSON( queryParams[ queryParamKey ] ) )
+            : queryParams[ queryParamKey ].toList();
+          }
         return queryString.listAppend( encodedKey & ( includeEmptyValues || len( encodedValue ) ? ( '=' & encodedValue ) : '' ), '&' );
       }, ''
     );
