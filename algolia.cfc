@@ -236,7 +236,14 @@ component output="false" displayname="algolia.cfc"  {
     return result;
   }
 
-  // public struct function getTaskStatus() {}
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#get-a-tasks-status
+  * @hint get the status of a task on the server.
+  * All server task are asynchronous and you can check with this method that the task is published or not.
+  */
+  public struct function getTaskStatus( required string indexName, required string taskID ) {
+    return apiCall( true, 'GET', '/indexes/#indexName#/task/#taskID#' );
+  }
 
   // public struct function getSettings() {}
 
