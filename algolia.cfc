@@ -281,11 +281,39 @@ component output="false" displayname="algolia.cfc"  {
     return apiCall( true, 'GET', '/indexes/#indexName#/task/#taskID#' );
   }
 
-  // public struct function getSettings() {}
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#get-index-settings
+  * https://www.algolia.com/doc/rest-api/search/#backward-compatibility
+  * @hint Get settings of this index.
+  * Synonyms were originally set via the index settings, and a Get settings call would return all synonyms as part of the settings JSON data. This behavior has been kept to maintain backward compatibility.
+  * Because we do not want synonyms to be included in our settings, we getVersion=2 to the request as a query parameter:
+  */
+  public struct function getSettings( required string indexName ) {
+    var params = { 'getVersion' : 2 };
+    return apiCall( true, 'GET', '/indexes/#indexName#/settings', params );
+  }
 
-  // public struct function clearIndex() {}
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#clear-index
+  * @hint This function deletes the index content. Settings and index specific API keys are kept untouched.
+  */
+  public struct function clearIndex( required string indexName ) {
+    return apiCall( false, 'POST', '/indexes/#indexName#/clear' );
+  }
 
-  // public struct function setSettings() {}
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#change-index-settings
+  * @hint Set settings for this index.
+  * Documentation states that "Specifying null for a setting resets it to its default value." This is not true for all settings. For example, 'hitsPerPage' requires a value. I don't have have a list of settings that require values.
+  * To pass in null for CFML, use `javaCast( "null", "" )`
+  */
+  public struct function setSettings( required string indexName, required struct settings, boolean forwardToReplicas = false ) {
+    var params = {};
+    if ( forwardToReplicas )
+      params = { 'forwardToReplicas' : true };
+
+    return apiCall( false, 'PUT', '/indexes/#indexName#/settings', params, settings );
+  }
 
   // public struct function listApiKeys() {}
 
@@ -400,6 +428,7 @@ component output="false" displayname="algolia.cfc"  {
 
       } else if ( result.statusClass == 4 && result.keyExists( 'message' ) ) {
         //if it's a 400 from Algolia, throw error
+        writeDump( var='#result#', format='html', abort='true' );
         throw( result.message, 'AlgoliaException', '#httpMethod# request to #host##path## queryString# resulted in #result.statusText#' , result.statusCode );
 
       } else {
