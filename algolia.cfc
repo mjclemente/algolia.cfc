@@ -315,25 +315,105 @@ component output="false" displayname="algolia.cfc"  {
     return apiCall( false, 'PUT', '/indexes/#indexName#/settings', params, settings );
   }
 
-  // public struct function listApiKeys() {}
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#list-index-specific-api-keys
+  * @hint List all existing API keys associated to this index with their associated ACLs.
+  * API keys may take some time to be propagated.
+  * Note: API keys created through the web interface don't appear to be listed. I'm not sure if that is intended behavior.
+  */
+  public struct function listApiKeys( required string indexName ) {
+    return apiCall( true, 'GET', '/indexes/#indexName#/keys' );
+  }
 
-  // public struct function listUserKeys() {}
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#retrieve-an-index-specific-api-key
+  * @hint Get ACL of a API key associated to this index.
+  * API keys may take some time to be propagated.
+  * Note: API keys created through the web interface aren't returned. They result in a message that the key is not found. I'm not sure if that is intended behavior.
+  */
+  public struct function getApiKey( required string indexName, required string key ) {
+    return apiCall( true, 'GET', '/indexes/#indexName#/keys/#key#' );
+  }
 
-  // public struct function getUserKeyACL() {}
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#delete-an-index-specific-api-key
+  * @hint Delete an existing API key associated to this index.
+  */
+  public struct function deleteApiKey( required string indexName, required string key ) {
+    return apiCall( false, 'DELETE', '/indexes/#indexName#/keys/#key#' );
+  }
 
-  // public struct function getApiKey() {}
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#add-an-index-specific-api-key
+  * @hint Create a new API key associated to this index.
+  * @obj There are two ways that this can be passed in.
+      1. An array of the ACL allowed for the key :
+        - search: allow to search (https and http)
+        - addObject: allows to add/update an object in the index (https only)
+        - deleteObject : allows to delete an existing object (https only)
+        - deleteIndex : allows to delete index content (https only)
+        - settings : allows to get index settings (https only)
+        - editSettings : allows to change index settings (https only)
+      2. A struct definining the parameters for the key:
+        -acl: array of string
+        - indices: array of string
+        - validity: int
+        - referers: array of string
+        - description: string
+        - maxHitsPerQuery: integer
+        - queryParameters: string
+        - maxQueriesPerIPPerHour: integer
+  */
+  public struct function addApiKey( required string indexName, required any obj, numeric validity = 0, numeric maxQueriesPerIPPerHour = 0, numeric maxHitsPerQuery = 0 ) {
+    var params = {
+        'validity': validity,
+        'maxQueriesPerIPPerHour': maxQueriesPerIPPerHour,
+        'maxHitsPerQuery': maxHitsPerQuery
+      };
 
-  // public struct function deleteApiKey() {}
+    if ( !isStruct( obj ) )
+      params[ 'acl' ] = obj;
+    else
+      params.append( obj ); //values in obj struct overwrite params
 
-  // public struct function deleteUserKey() {}
+    return apiCall( false, 'POST', '/indexes/#indexName#/keys', {}, params );
+  }
 
-  // public struct function addApiKey() {}
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#update-an-index-specific-api-key
+  * @hint Update an API key associated to this index.
+  * @obj There are two ways that this can be passed in.
+      1. An array of the ACL allowed for the key :
+        - search: allow to search (https and http)
+        - addObject: allows to add/update an object in the index (https only)
+        - deleteObject : allows to delete an existing object (https only)
+        - deleteIndex : allows to delete index content (https only)
+        - settings : allows to get index settings (https only)
+        - editSettings : allows to change index settings (https only)
+      2. A struct definining the parameters for the key:
+        -acl: array of string
+        - indices: array of string
+        - validity: int
+        - referers: array of string
+        - description: string
+        - maxHitsPerQuery: integer
+        - queryParameters: string
+        - maxQueriesPerIPPerHour: integer
+  */
+  public struct function updateApiKey( required string indexName, required string key, required any obj, numeric validity = 0, numeric maxQueriesPerIPPerHour = 0, numeric maxHitsPerQuery = 0 ) {
+    var params = {
+        'validity': validity,
+        'maxQueriesPerIPPerHour': maxQueriesPerIPPerHour,
+        'maxHitsPerQuery': maxHitsPerQuery
+      };
 
-  // public struct function addUserKey() {}
+    if ( !isStruct( obj ) )
+      params[ 'acl' ] = obj;
+    else
+      params.append( obj ); //values in obj struct overwrite params
 
-  // public struct function updateApiKey() {}
-
-  // public struct function updateUserKey() {}
+    return apiCall( false, 'PUT', '/indexes/#indexName#/keys/#key#', {}, params );
+  }
 
   /**
   * https://www.algolia.com/doc/rest-api/search/#batch-write-operations
