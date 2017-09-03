@@ -443,19 +443,105 @@ component output="false" displayname="algolia.cfc"  {
     return { 'requests' : requests };
   }
 
-  // public struct function browseFrom() {}
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#browse-all-index-content
+  * @hint Browse all index content.
+  */
+  public struct function browseFrom( required string indexName, string query = '', struct params = {}, string cursor = '' ) {
+    if ( query.len() )
+      params[ 'query' ] = query;
 
-  // public struct function searchSynonyms() {}
+    if ( cursor.len() )
+      params[ 'cursor' ] = cursor;
 
-  // public struct function getSynonym() {}
+    return apiCall( true, 'GET', '/indexes/#indexName#/browse', params );
+  }
 
-  // public struct function deleteSynonym() {}
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#search-synonyms
+  * @hint Search for synonyms from this index.
+  * @synonymType can be passed in as a string (for a single type) or an array
+  */
+  public struct function searchSynonyms( required string indexName, string query = '', any synonymType = [], numeric page = 0, numeric hitsPerPage = 0 ) {
+    var params = {};
 
-  // public struct function clearSynonyms() {}
+    if ( query.len() )
+      params[ 'query' ] = query;
 
-  // public struct function batchSynonyms() {}
+    if ( !isArray( synonymType ) )
+      synonymType = [ synonymType ];
 
-  // public struct function saveSynonym() {}
+    if ( synonymType.len() )
+      params[ 'type' ] = synonymType.toList();
+
+    if ( page )
+      params[ 'page' ] = page;
+
+    if ( hitsPerPage )
+      params[ 'hitsPerPage' ] = hitsPerPage;
+
+    return apiCall( true, 'POST', '/indexes/#indexName#/synonyms/search', {}, params );
+  }
+
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#get-a-synonym
+  * @hint Get a synonym from this index.
+  */
+  public struct function getSynonym( required string indexName, required any objectID ) {
+    return apiCall( true, 'GET', '/indexes/#indexName#/synonyms/#encodeUrl( objectID )#' );
+  }
+
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#delete-one-synonyms-set
+  * @hint Delete a synonym from the index.
+  */
+  public struct function deleteSynonym( required string indexName, required any objectID, boolean forwardToReplicas = false ) {
+    var params = {};
+    if ( forwardToReplicas )
+      params = { 'forwardToReplicas' : true };
+
+    return apiCall( false, 'DELETE', '/indexes/#indexName#/synonyms/#encodeUrl( objectID )#', params );
+  }
+
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#delete-all-synonyms
+  * @hint Delete all synonyms from the index.
+  */
+  public struct function clearSynonyms( required string indexName, boolean forwardToReplicas = false ) {
+    var params = {};
+    if ( forwardToReplicas )
+      params = { 'forwardToReplicas' : true };
+
+    return apiCall( false, 'POST', '/indexes/#indexName#/synonyms/clear', params );
+  }
+
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#batch-synonyms
+  * @hint Add several synonyms in this index.
+  * @synonyms A JSON array of synonym objects. The syntax of each object is the same as in Create/update a synonym.
+  * There's a strange issue where synonyms created here aren't showing in the admin, but can be accessed via the API search
+  */
+  public struct function batchSynonyms( required string indexName, array synonyms = [], boolean forwardToReplicas = false, boolean replaceExistingSynonyms = false ) {
+    var params = {};
+    if ( forwardToReplicas )
+      params[ 'forwardToReplicas' ] = true;
+    if ( replaceExistingSynonyms )
+      params[ 'replaceExistingSynonyms' ] = true;
+    return apiCall( false, 'POST', '/indexes/#indexName#/synonyms/batch', params, synonyms );
+  }
+
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#createupdate-a-synonym
+  * @hint Add a synonym in this index.
+  * The keys synonym struct will vary based on type. It must always contain an objectID and type
+  */
+  public struct function saveSynonym( required string indexName, required struct synonym, boolean forwardToReplicas = false ) {
+    var params = {};
+    if ( forwardToReplicas )
+      params = { 'forwardToReplicas' : true };
+
+    return apiCall( false, 'PUT', '/indexes/#indexName#/synonyms/#encodeUrl( synonym.objectID )#', params, synonym );
+  }
 
   // public struct function searchFacet() {}
 
