@@ -543,7 +543,18 @@ component output="false" displayname="algolia.cfc"  {
     return apiCall( false, 'PUT', '/indexes/#indexName#/synonyms/#encodeUrl( synonym.objectID )#', params, synonym );
   }
 
-  // public struct function searchFacet() {}
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#search-for-facet-values
+  * @hint Perform a search within a given facet's values
+  * @facetName name of the facet to search. It must have been declared in the index's `attributesForFacetting` setting with the searchable()` modifier.
+  * @facetQuery text to search for in the facet's values.
+  * @query an optional query to take extra search parameters into account. The parameters apply to index objects like in a regular search query. Only facet values contained in the matched objects will be returned.
+  */
+  public struct function searchForFacetValues( required string indexName, required string facetName, required string facetQuery, struct args = {} ) {
+    args[ 'facetQuery' ] = facetQuery;
+    var params = { 'params': parseQueryParams( args ) };
+    return apiCall( false, 'POST', '/indexes/#indexName#/facets/#encodeUrl( facetName )#/query', {}, params );
+  }
 
   // public struct function searchRules() {}
 
