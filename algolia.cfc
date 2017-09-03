@@ -309,8 +309,7 @@ component output="false" displayname="algolia.cfc"  {
   */
   public struct function setSettings( required string indexName, required struct settings, boolean forwardToReplicas = false ) {
     var params = {};
-    if ( forwardToReplicas )
-      params = { 'forwardToReplicas' : true };
+    if ( forwardToReplicas ) params[ 'forwardToReplicas' ] = true;
 
     return apiCall( false, 'PUT', '/indexes/#indexName#/settings', params, settings );
   }
@@ -497,8 +496,7 @@ component output="false" displayname="algolia.cfc"  {
   */
   public struct function deleteSynonym( required string indexName, required any objectID, boolean forwardToReplicas = false ) {
     var params = {};
-    if ( forwardToReplicas )
-      params = { 'forwardToReplicas' : true };
+    if ( forwardToReplicas ) params[ 'forwardToReplicas' ] = true;
 
     return apiCall( false, 'DELETE', '/indexes/#indexName#/synonyms/#encodeUrl( objectID )#', params );
   }
@@ -509,8 +507,7 @@ component output="false" displayname="algolia.cfc"  {
   */
   public struct function clearSynonyms( required string indexName, boolean forwardToReplicas = false ) {
     var params = {};
-    if ( forwardToReplicas )
-      params = { 'forwardToReplicas' : true };
+    if ( forwardToReplicas ) params[ 'forwardToReplicas' ] = true;
 
     return apiCall( false, 'POST', '/indexes/#indexName#/synonyms/clear', params );
   }
@@ -523,10 +520,9 @@ component output="false" displayname="algolia.cfc"  {
   */
   public struct function batchSynonyms( required string indexName, array synonyms = [], boolean forwardToReplicas = false, boolean replaceExistingSynonyms = false ) {
     var params = {};
-    if ( forwardToReplicas )
-      params[ 'forwardToReplicas' ] = true;
-    if ( replaceExistingSynonyms )
-      params[ 'replaceExistingSynonyms' ] = true;
+    if ( forwardToReplicas ) params[ 'forwardToReplicas' ] = true;
+    if ( replaceExistingSynonyms ) params[ 'replaceExistingSynonyms' ] = true;
+
     return apiCall( false, 'POST', '/indexes/#indexName#/synonyms/batch', params, synonyms );
   }
 
@@ -537,8 +533,7 @@ component output="false" displayname="algolia.cfc"  {
   */
   public struct function saveSynonym( required string indexName, required struct synonym, boolean forwardToReplicas = false ) {
     var params = {};
-    if ( forwardToReplicas )
-      params = { 'forwardToReplicas' : true };
+    if ( forwardToReplicas ) params[ 'forwardToReplicas' ] = true;
 
     return apiCall( false, 'PUT', '/indexes/#indexName#/synonyms/#encodeUrl( synonym.objectID )#', params, synonym );
   }
@@ -575,8 +570,7 @@ component output="false" displayname="algolia.cfc"  {
   */
   public struct function deleteRule( required string indexName, required any objectID, boolean forwardToReplicas = false ) {
     var params = {};
-    if ( forwardToReplicas )
-      params = { 'forwardToReplicas' : true };
+    if ( forwardToReplicas ) params[ 'forwardToReplicas' ] = true;
 
     return apiCall( false, 'DELETE', '/indexes/#indexName#/rules/#encodeUrl( objectID )#', params );
   }
@@ -586,8 +580,7 @@ component output="false" displayname="algolia.cfc"  {
   */
   public struct function clearRules( required string indexName, boolean forwardToReplicas = false ) {
     var params = {};
-    if ( forwardToReplicas )
-      params = { 'forwardToReplicas' : true };
+    if ( forwardToReplicas ) params[ 'forwardToReplicas' ] = true;
 
     return apiCall( false, 'POST', '/indexes/#indexName#/rules/clear', params );
   }
@@ -611,8 +604,7 @@ component output="false" displayname="algolia.cfc"  {
   */
   public struct function saveRule( required string indexName, required struct rule, boolean forwardToReplicas = false ) {
     var params = {};
-    if ( forwardToReplicas )
-      params = { 'forwardToReplicas' : true };
+    if ( forwardToReplicas ) params[ 'forwardToReplicas' ] = true;
 
     return apiCall( false, 'PUT', '/indexes/#indexName#/rules/#encodeUrl( rule.objectID )#', params );
   }
@@ -639,7 +631,7 @@ component output="false" displayname="algolia.cfc"  {
   * @hint Move an existing index.
   */
   public struct function moveIndex( required string srcIndexName, required string dstIndexName ) {
-    var body = { 'operation': 'move', 'destination': dstIndexName }
+    var body = { 'operation': 'move', 'destination': dstIndexName };
     return apiCall( false, 'POST', '/indexes/#srcIndexName#/operation', {}, body );
   }
 
@@ -648,7 +640,7 @@ component output="false" displayname="algolia.cfc"  {
   * @hint Copy an existing index.
   */
   public struct function copyIndex( required string srcIndexName, required string dstIndexName ) {
-    var body = { 'operation': 'copy', 'destination': dstIndexName }
+    var body = { 'operation': 'copy', 'destination': dstIndexName };
     return apiCall( false, 'POST', '/indexes/#srcIndexName#/operation', {}, body );
   }
 
