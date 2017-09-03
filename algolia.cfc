@@ -556,17 +556,66 @@ component output="false" displayname="algolia.cfc"  {
     return apiCall( false, 'POST', '/indexes/#indexName#/facets/#encodeUrl( facetName )#/query', {}, params );
   }
 
-  // public struct function searchRules() {}
+  /**
+  * @hint Search for rules inside the index.
+  */
+  public struct function searchRules( required string indexName, required struct params ) {
+    return apiCall( true, 'POST', '/indexes/#indexName#/rules/search', {}, params );
+  }
 
-  // public struct function getRule() {}
+  /**
+  * @hint Retrieve a rule from the index with the specified objectID.
+  */
+  public struct function getRule( required string indexName, required any objectID ) {
+    return apiCall( true, 'GET', '/indexes/#indexName#/rules/#encodeUrl( objectID )#' );
+  }
 
-  // public struct function deleteRule() {}
+  /**
+  * @hint Delete the rule with identified by the given objectID.
+  */
+  public struct function deleteRule( required string indexName, required any objectID, boolean forwardToReplicas = false ) {
+    var params = {};
+    if ( forwardToReplicas )
+      params = { 'forwardToReplicas' : true };
 
-  // public struct function clearRules() {}
+    return apiCall( false, 'DELETE', '/indexes/#indexName#/rules/#encodeUrl( objectID )#', params );
+  }
 
-  // public struct function batchRules() {}
+  /**
+  * @hint Clear all the rules of an index.
+  */
+  public struct function clearRules( required string indexName, boolean forwardToReplicas = false ) {
+    var params = {};
+    if ( forwardToReplicas )
+      params = { 'forwardToReplicas' : true };
 
-  // public struct function saveRule() {}
+    return apiCall( false, 'POST', '/indexes/#indexName#/rules/clear', params );
+  }
+
+  /**
+  * @hint Save a batch of new rules
+  * @rules array of rule objects. The syntax of each object is the same as in saving a rule. Each must contain an objectID
+  * There's a strange issue where synonyms created here aren't showing in the admin, but can be accessed via the API search
+  */
+  public struct function batchRules( required string indexName, array rules = [], boolean forwardToReplicas = false, boolean replaceExistingSynonyms = false ) {
+    var params = {};
+    if ( forwardToReplicas ) params[ 'forwardToReplicas' ] = true;
+    if ( replaceExistingSynonyms ) params[ 'replaceExistingSynonyms' ] = true;
+
+    return apiCall( false, 'POST', '/indexes/#indexName#/rules/batch', params, rules );
+  }
+
+  /**
+  * @hint Save a new rule in the index.
+  * @rule The body of the rule. Must contain an objectID key
+  */
+  public struct function saveRule( required string indexName, required struct rule, boolean forwardToReplicas = false ) {
+    var params = {};
+    if ( forwardToReplicas )
+      params = { 'forwardToReplicas' : true };
+
+    return apiCall( false, 'PUT', '/indexes/#indexName#/rules/#encodeUrl( rule.objectID )#', params );
+  }
 
 
   /**
