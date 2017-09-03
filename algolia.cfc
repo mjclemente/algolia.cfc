@@ -569,9 +569,51 @@ component output="false" displayname="algolia.cfc"  {
   // public struct function saveRule() {}
 
 
-  //List indexes
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#list-indexes
+  * @hint List all existing indexes
+  */
   public struct function listIndexes( numeric page ) {
     return apiCall( true, 'GET', '/indexes' );
+  }
+
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#delete-index
+  * @hint Delete an index.
+  */
+  public struct function deleteIndex( required string indexName ) {
+    return apiCall( false, 'DELETE', '/indexes/#indexName#' );
+  }
+
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#copymove-an-index
+  * @hint Move an existing index.
+  */
+  public struct function moveIndex( required string srcIndexName, required string dstIndexName ) {
+    var body = { 'operation': 'move', 'destination': dstIndexName }
+    return apiCall( false, 'POST', '/indexes/#srcIndexName#/operation', {}, body );
+  }
+
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#copymove-an-index
+  * @hint Copy an existing index.
+  */
+  public struct function copyIndex( required string srcIndexName, required string dstIndexName ) {
+    var body = { 'operation': 'copy', 'destination': dstIndexName }
+    return apiCall( false, 'POST', '/indexes/#srcIndexName#/operation', {}, body );
+  }
+
+  /**
+  * https://www.algolia.com/doc/rest-api/search/#get-latest-logs
+  * @hint Return last logs entries.
+  */
+  public struct function getLogs( numeric offset = 0, numeric length = 10, string indexName = '', string type = 'all' ) {
+    var params = {};
+    if ( offset ) params[ 'offset' ] = offset;
+    if ( length ) params[ 'length' ] = length;
+    if ( indexName.len() ) params[ 'indexName' ] = indexName;
+    if ( type.len() ) params[ 'type' ] = type;
+    return apiCall( false, 'GET', '/logs', params );
   }
 
   // API CALL RELATED PRIVATE FUNCTIONS
