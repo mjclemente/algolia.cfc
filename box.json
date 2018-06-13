@@ -1,0 +1,56 @@
+{
+    "name":"algolia.cfc",
+    "version":"1.0.0",
+    "author":"Matthew Clemente <mjclemente@gmail.com>",
+    "location":"mjclemente/algolia.cfc#v1.0.0",
+    "homepage":"https://github.com/mjclemente/algolia.cfc",
+    "documentation":"",
+    "repository":{
+        "type":"",
+        "URL":""
+    },
+    "bugs":"",
+    "slug":"algoliacfc",
+    "shortDescription":"A CFML wrapper for the Algolia API",
+    "description":"",
+    "instructions":"",
+    "changelog":"",
+    "type":"modules",
+    "keywords":"algolia, api, search",
+    "private":false,
+    "projectURL":"",
+    "license":[
+        {
+            "type":"MIT",
+            "URL":"https://github.com/mjclemente/algolia.cfc/blob/master/LICENSE"
+        }
+    ],
+    "contributors":[],
+    "dependencies":{},
+    "devDependencies":{},
+    "installPaths":{},
+    "scripts":{},
+    "ignore":[
+        "**/.*",
+        "test",
+        "tests"
+    ],
+    "testbox":{
+        "runner":[
+            {
+                "default":""
+            }
+        ],
+        "labels":"",
+        "reporter":"",
+        "bundles":"",
+        "recurse":true,
+        "directory":"tests.specs",
+        "testBundles":"",
+        "testSuites":"",
+        "testSpecs":"",
+        "verbose":true,
+        "watchDelay":500,
+        "watchPaths":"**.cfc"
+    }
+}
