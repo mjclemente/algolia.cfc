@@ -1,7 +1,9 @@
 # algolia.cfc
-A CFML wrapper for the Algolia API
+A CFML wrapper for the [Algolia Search API](https://www.algolia.com/doc/api-reference/). It currently supports most index-related methods, as well as a portion of the higher account-level methods.
 
-This project borrows heavily from the API frameworks built by [jcberquist](https://github.com/jcberquist), such as [stripecfc](https://github.com/jcberquist/stripecfc), [xero-cfml](https://github.com/jcberquist/xero-cfml), and [aws-cfml](https://github.com/jcberquist/aws-cfml).
+### Acknowledgements
+
+This project borrows heavily from the API frameworks built by [jcberquist](https://github.com/jcberquist), such as [xero-cfml](https://github.com/jcberquist/xero-cfml) and [aws-cfml](https://github.com/jcberquist/aws-cfml). Because it draws on those projects, it is also licensed under the terms of the MIT license.
 
 This is a very early stage API wrapper. Feel free to use the issue tracker to report bugs or suggest improvements!
 
