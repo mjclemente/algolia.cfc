@@ -5,7 +5,48 @@ A CFML wrapper for the [Algolia Search API](https://www.algolia.com/doc/api-refe
 
 This project borrows heavily from the API frameworks built by [jcberquist](https://github.com/jcberquist), such as [xero-cfml](https://github.com/jcberquist/xero-cfml) and [aws-cfml](https://github.com/jcberquist/aws-cfml). Because it draws on those projects, it is also licensed under the terms of the MIT license.
 
-This is a very early stage API wrapper. Feel free to use the issue tracker to report bugs or suggest improvements!
+## Table of Contents
+
+- [Installation](#installation)
+  - [Standalone Usage](#standalone-usage)
+  - [Use as a ColdBox Module](#use-as-a-coldbox-module)
+- [Quick Start for Sending](#quick-start)
+
+## Installation
+This wrapper can be installed as standalone component or as a ColdBox Module. Either approach requires a simple CommandBox command:
+
+```
+$ box install algoliacfc
+```
+
+If you can't use CommandBox, all you need to use this wrapper as a standalone component is the `algolia.cfc` file and the optional index helper component, located in `/helpers`; add them to your application wherever you store cfcs. But you should really be using CommandBox.
+
+### Standalone Usage
+
+CommandBox will install this component into a folder named `algoliacfc` within your current working directory; it can then be instantiated directly like so:
+
+```cfc
+algoliaClient = new path.to.algoliacfc.algolia( applicationId = 'xxx', apiKey = 'xxx' );
+```
+
+### Use as a ColdBox Module
+
+To use the wrapper as a ColdBox Module you will need to pass the configuration settings in from your `config/Coldbox.cfc`. This is done within the `moduleSettings` struct:
+
+```cfc
+moduleSettings = {
+  algoliacfc = {
+    applicationId = 'xxx',
+    apiKey = 'xxx'
+  }
+};
+```
+
+You can then leverage the CFC via the injection DSL: `algolia@algoliacfc`:
+
+```
+property name="algoliaClient" inject="algolia@algoliacfc";
+```
 
 ## Quick Start
 
