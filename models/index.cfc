@@ -31,7 +31,7 @@ component accessors="true" {
       args.append( missingMethodArguments[ key ] );
     }
 
-    writeDump( var='#invoke( variables.algolia, missingMethodName, args )#', format='html', abort='true' );
+    return invoke( variables.algolia, missingMethodName, args );
   }
 
 }
