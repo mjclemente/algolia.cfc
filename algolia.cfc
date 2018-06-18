@@ -56,7 +56,7 @@ component output="false" displayname="algolia.cfc"  {
   * @hint Return the initialized index object for easier access to methods
   */
   public any function initIndex( required string indexName ) {
-    return new models.index( this, indexName );
+    return new helpers.index( this, indexName );
   }
 
   /**
