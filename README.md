@@ -54,18 +54,28 @@ In 30 seconds, this quick start tutorial will show you how to index and search o
 
 ### Initialize the client
 
-You first need to initialize the client. For that you need your **Application ID** and **API Key**. You can find both of them on your [Algolia account](https://www.algolia.com/api-keys).
+You first need to initialize the client. For that you need your **Application ID** and **API Key**. You can find both of them on your [Algolia account](https://www.algolia.com/api-keys). Note that if you're using ColdBox/WireBox, this will be done for you when you pass in your configuration via your app's `moduleSettings`.
 
 ```cfc
-algoliaSearch = new algolia( applicationId = 'YourApplicationID', apiKey = 'YourAPIKey' );
+algoliaClient = new path.to.algoliacfc.algolia( applicationId = 'xxx', apiKey = 'xxx' );
+```
+Optionally, you can then configure a specific search *Index* object to work with. This will save you from needing to pass in the index name to the client with every request.
+```cfc
+index = algoliaClient.initIndex( 'your_index_name' );
 ```
 
 ### Push data
 If you attempt to load data into an index that does not exist, Algolia will automatically create the index before populating it. Consequently, you can use the sample data provided in `members.json` to create and populate your first index, using the following code:
 
 ```cfc
-members = deserializeJSON( fileRead( expandPath( 'members.json' ) ) ); //update path, based on your app setup
-response = algoliaSearch.addObjects( 'members', members );
+//update the file path, based on your app setup
+members = deserializeJSON( fileRead( expandPath( 'members.json' ) ) );
+
+//using index object
+response = index.addObjects( members );
+
+//without configured index object
+//response = algoliaClient.addObjects( 'members', members );
 ```
 
 ### Search
@@ -74,27 +84,34 @@ You can now search for members using first name, last name, company, etc. (even 
 
 ```cfc
 // search by first name
-writeDump( var='#algoliaSearch.search( 'members', 'Constance' )#' );
+writeDump( var='#index.search( 'Constance' )#' );
 
 // search a first name with typo
-writeDump( var='#algoliaSearch.search( 'members', 'Constnce' )#' );
+writeDump( var='#index.search( 'Constnce' )#' );
 
 // search for a company
-writeDump( var='#algoliaSearch.search( 'members', 'scentric' )#' );
+writeDump( var='#index.search( 'scentric' )#' );
 
 // search for a first name and company
-writeDump( var='#algoliaSearch.search( 'members', 'Constance Ziore' )#' );
+writeDump( var='#index.search( 'Constance Ziore' )#' );
 ```
+Note that all of the above examples can be handled directly with the Algolia client wrapper, using the same methods, by passing in the desired index as the first argument, for example: `algoliaClient.search( 'members', 'Constance' )`
 
 ### A Note About Working with Indices
 
-Most of the official Algolia clients follow an Object Oriented pattern, requiring an *Index* object to be initialized in order to read/write from that index. Currently, this client does not have an *Index* object (so it doesn't need to be initialized). Instead, you need to include the name of the index with your requests. The operations available generally use the following format:
+Most of the official Algolia clients follow an Object Oriented pattern, requiring an *Index* object to be initialized in order to read/write from that index. While this client does not require an *Index* object (so it doesn't need to be initialized), but it does support using one (so you don't need to provide the name of the index in every request). Consequently, there are two ways of invoking index-related methods, which generally use the following format:
 
+__via the main Algolia client__
 ```cfc
-algoliaSearch.operation( indexName, args );
+algoliaClient.operation( indexName, args );
 ```
 
-There is an obvious convenience to having an *Index* object; you can initialize it once, and then you don't need to provide the `indexName` argument again. So adding an *Index* object is on the TODO list for this project.
+__via an *Index* object__
+```cfc
+index.operation( args );
+```
+
+There is an obvious convenience to having an *Index* object; you can initialize it once, and then you don't need to provide the `indexName` argument repeatedly. However, in the case of one-off operations, being able to use the main client without initializing
 
 
 ### Frontend search
