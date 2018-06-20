@@ -114,7 +114,6 @@ index.operation( args );
 
 There is an obvious benefit to using the *Index* object - once initialized you don't need to provide the `indexName` argument for every request. However, being able to use the main Algolia client without initializing an index can be convenient for one-off operations, as well as for backwards compatibility with earlier versions of this wrapper.
 
-
 ### Frontend search
 
 **Note:** If you are building a web application, Algolia recommends using their [JavaScript client](https://github.com/algolia/algoliasearch-client-javascript) to perform queries, for two primary reasons:
@@ -132,3 +131,9 @@ For questions that aren't about bugs, feel free to hit me up on the [CFML Slack 
 Before putting the work into creating a PR, I'd appreciate it if you opened an issue. That way we can discuss the best way to implement changes/features, before work is done.
 
 Changes should be submitted as Pull Requests on the `develop` branch.
+
+# TODO
+
+* Document main client and index object methods
+* Add "Configure" section
+
