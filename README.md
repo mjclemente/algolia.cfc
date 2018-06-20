@@ -16,6 +16,8 @@ This project borrows heavily from the API frameworks built by [jcberquist](https
   - [Search](#search)
   - [A Note About Working with Indices](#a-note-about-working-with-indices)
   - [Frontend Search](#frontend-search)
+- [Questions](#questions)
+- [Contributing](#contributing)
 
 ## Installation
 This wrapper can be installed as standalone component or as a ColdBox Module. Either approach requires a simple CommandBox command:
@@ -120,3 +122,13 @@ There is an obvious benefit to using the *Index* object - once initialized you d
   * Your users get a better response time by not going through your servers
   * It will offload unnecessary tasks from your servers
   * (Also, why reinvent the wheel)
+
+# Questions
+For questions that aren't about bugs, feel free to hit me up on the [CFML Slack Channel](http://cfml-slack.herokuapp.com); I'm @mjclemente. You'll likely get a much faster response than creating an issue here.
+
+# Contributing
+:+1::tada: First off, thanks for taking the time to contribute! :tada::+1:
+
+Before putting the work into creating a PR, I'd appreciate it if you opened an issue. That way we can discuss the best way to implement changes/features, before work is done.
+
+Changes should be submitted as Pull Requests on the `develop` branch.
