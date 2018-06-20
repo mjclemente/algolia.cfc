@@ -1,8 +1,8 @@
 {
     "name":"algolia.cfc",
-    "version":"1.0.0",
+    "version":"2.0.1",
     "author":"Matthew Clemente <mjclemente@gmail.com>",
-    "location":"mjclemente/algolia.cfc#v1.0.0",
+    "location":"mjclemente/algolia.cfc#v2.0.1",
     "homepage":"https://github.com/mjclemente/algolia.cfc",
     "documentation":"",
     "repository":{
