@@ -10,7 +10,12 @@ This project borrows heavily from the API frameworks built by [jcberquist](https
 - [Installation](#installation)
   - [Standalone Usage](#standalone-usage)
   - [Use as a ColdBox Module](#use-as-a-coldbox-module)
-- [Quick Start for Sending](#quick-start)
+- [Quick Start](#quick-start)
+  - [Initialization](#initialize-the-client)
+  - [Push Data](#push-data)
+  - [Search](#search)
+  - [A Note About Working with Indices](#a-note-about-working-with-indices)
+  - [Frontend Search](#frontend-search)
 
 ## Installation
 This wrapper can be installed as standalone component or as a ColdBox Module. Either approach requires a simple CommandBox command:
@@ -19,7 +24,7 @@ This wrapper can be installed as standalone component or as a ColdBox Module. Ei
 $ box install algoliacfc
 ```
 
-If you can't use CommandBox, all you need to use this wrapper as a standalone component is the `algolia.cfc` file and the optional index helper component, located in `/helpers`; add them to your application wherever you store cfcs. But you should really be using CommandBox.
+If you can't use CommandBox, all you need to use this wrapper as a standalone component is the `algolia.cfc` file and the index helper component, located in `/helpers`; add them to your application wherever you store cfcs. But you should really be using CommandBox.
 
 ### Standalone Usage
 
@@ -44,7 +49,7 @@ moduleSettings = {
 
 You can then leverage the CFC via the injection DSL: `algolia@algoliacfc`:
 
-```
+```cfc
 property name="algoliaClient" inject="algolia@algoliacfc";
 ```
 
@@ -58,9 +63,6 @@ You first need to initialize the client. For that you need your **Application ID
 
 ```cfc
 algoliaClient = new path.to.algoliacfc.algolia( applicationId = 'xxx', apiKey = 'xxx' );
-```
-Optionally, you can then configure a specific search *Index* object to work with. This will save you from needing to pass in the index name to the client with every request.
-```cfc
 index = algoliaClient.initIndex( 'your_index_name' );
 ```
 
@@ -68,14 +70,12 @@ index = algoliaClient.initIndex( 'your_index_name' );
 If you attempt to load data into an index that does not exist, Algolia will automatically create the index before populating it. Consequently, you can use the sample data provided in `members.json` to create and populate your first index, using the following code:
 
 ```cfc
+index = algoliaClient.initIndex( 'member' );
+
 //update the file path, based on your app setup
 members = deserializeJSON( fileRead( expandPath( 'members.json' ) ) );
 
-//using index object
-response = index.addObjects( members );
-
-//without configured index object
-//response = algoliaClient.addObjects( 'members', members );
+index.addObjects( members );
 ```
 
 ### Search
@@ -95,11 +95,10 @@ writeDump( var='#index.search( 'scentric' )#' );
 // search for a first name and company
 writeDump( var='#index.search( 'Constance Ziore' )#' );
 ```
-Note that all of the above examples can be handled directly with the Algolia client wrapper, using the same methods, by passing in the desired index as the first argument, for example: `algoliaClient.search( 'members', 'Constance' )`
 
 ### A Note About Working with Indices
 
-Most of the official Algolia clients follow an Object Oriented pattern, requiring an *Index* object to be initialized in order to read/write from that index. While this client does not require an *Index* object (so it doesn't need to be initialized), but it does support using one (so you don't need to provide the name of the index in every request). Consequently, there are two ways of invoking index-related methods, which generally use the following format:
+Most of the official Algolia clients follow an Object Oriented pattern, requiring an *Index* object to be initialized in order to read/write from that index. That is also the preferred approach for this client, but it is not required; index operations can also be performed directly by the Algolia client object. Consequently, there are two ways of invoking index-related methods, which generally use the following format:
 
 __via the main Algolia client__
 ```cfc
@@ -111,7 +110,7 @@ __via an *Index* object__
 index.operation( args );
 ```
 
-There is an obvious convenience to having an *Index* object; you can initialize it once, and then you don't need to provide the `indexName` argument repeatedly. However, in the case of one-off operations, being able to use the main client without initializing
+There is an obvious benefit to using the *Index* object - once initialized you don't need to provide the `indexName` argument for every request. However, being able to use the main Algolia client without initializing an index can be convenient for one-off operations, as well as for backwards compatibility with earlier versions of this wrapper.
 
 
 ### Frontend search
