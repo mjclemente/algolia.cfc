@@ -3,7 +3,7 @@ A CFML wrapper for the [Algolia Search API](https://www.algolia.com/doc/api-refe
 
 ### Acknowledgements
 
-This project borrows heavily from the API frameworks built by [jcberquist](https://github.com/jcberquist), such as [xero-cfml](https://github.com/jcberquist/xero-cfml) and [aws-cfml](https://github.com/jcberquist/aws-cfml). Because it draws on those projects, it is also licensed under the terms of the MIT license.
+This project borrows heavily from the API frameworks built by [jcberquist](https://github.com/jcberquist), such as [stripe-cfml](https://github.com/jcberquist/stripe-cfml) and [aws-cfml](https://github.com/jcberquist/aws-cfml). Because it draws on those projects, it is also licensed under the terms of the MIT license.
 
 ## Table of Contents
 
